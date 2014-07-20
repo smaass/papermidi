@@ -1,4 +1,9 @@
-var numBalls = 5;
+var numBalls = 10;
+var minRadius = 30;
+var maxRadius = 80;
+
+var sqrtMinR = Math.sqrt(minRadius);
+var sqrtDiff = Math.sqrt(maxRadius) - Math.sqrt(minRadius);
 
 function randInt(min, max) {
     return min + Math.floor(Math.random()*(max - min + 1));
@@ -6,7 +11,7 @@ function randInt(min, max) {
 
 function Ball(id, r, p, v) {
 	this.id = id;
-	this.note = randInt(40,80);
+	this.note = Math.floor((Math.sqrt(r) - sqrtMinR) / sqrtDiff * 60) + 20;
 	this.radius = r;
 	this.point = p;
 	this.vector = v;
@@ -156,7 +161,7 @@ window.onload = function() {
 					angle: 360 * Math.random(),
 					length: Math.random() * 10
 				});
-				var radius = Math.random() * 60 + 60;
+				var radius = Math.random() * (maxRadius - minRadius) + minRadius;
 				balls.push(new Ball(i, radius, position, vector));
 			}
 

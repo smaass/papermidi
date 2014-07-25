@@ -1,22 +1,24 @@
 var numBalls = 10;
+var minNote = 21;
+var maxNote = 92;
 var minRadius = 30;
 var maxRadius = 80;
 
-var sqrtMinR = Math.sqrt(minRadius);
-var sqrtDiff = Math.sqrt(maxRadius) - Math.sqrt(minRadius);
+var sqrtMinN = Math.sqrt(minNote);
+var sqrtDiff = Math.sqrt(maxNote) - Math.sqrt(minNote);
 
 function randInt(min, max) {
     return min + Math.floor(Math.random()*(max - min + 1));
 }
 
-function Ball(id, r, p, v) {
+function Ball(id, n, p, v) {
 	this.id = id;
-	this.note = Math.floor((Math.sqrt(r) - sqrtMinR) / sqrtDiff * 60) + 20;
-	this.radius = r;
+	this.note = n;
+	this.radius = (1 - ((Math.sqrt(n) - sqrtMinN) / sqrtDiff)) * (maxRadius - minRadius) + minRadius;
 	this.point = p;
 	this.vector = v;
 	this.maxVec = 15;
-	this.numSegment = Math.floor(r / 3 + 2);
+	this.numSegment = Math.floor(this.radius / 3 + 2);
 	this.boundOffset = [];
 	this.boundOffsetBuff = [];
 	this.sidePoints = [];
@@ -142,6 +144,29 @@ Ball.prototype = {
 	}
 };
 
+var modes = {
+    ionian: [0, 2, 4, 5, 7, 9, 11],
+    dorian: [0, 2, 3, 5, 7, 9, 10],
+    phrygian: [0, 1, 3, 5, 7, 8, 10],
+    lydian: [0, 2, 4, 6, 7, 9, 11],
+    mixolydian: [0, 2, 4, 5, 7, 9, 10],
+    aeolian: [0, 2, 3, 5, 7, 8, 10],
+    locrian: [0, 1, 3, 5, 6, 8, 10]
+};
+
+var randomScale =  function() {
+	var k = Object.keys(modes);
+	var base = Math.floor(Math.random() * 12) + 21;
+	var scaleType = k[ Math.floor(k.length * Math.random()) ];
+	var scale = [].concat.apply([], modes[scaleType].map(function(n) {
+		var f = n + base;
+		return [f, f+12, f+24, f+36, f+48, f+60];
+	}));
+	console.log(scaleType);
+	return scale;
+}
+
+var scale = randomScale();
 var balls = [];
 
 paper.install(window);
@@ -161,8 +186,8 @@ window.onload = function() {
 					angle: 360 * Math.random(),
 					length: Math.random() * 10
 				});
-				var radius = Math.random() * (maxRadius - minRadius) + minRadius;
-				balls.push(new Ball(i, radius, position, vector));
+				var note = scale[ Math.floor(scale.length * Math.random()) ];
+				balls.push(new Ball(i, note, position, vector));
 			}
 
 			view.onFrame = function() {

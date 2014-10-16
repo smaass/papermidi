@@ -225,6 +225,8 @@ window.onload = function() {
 
 			view.draw();
 			MIDI.loader.stop();
+
+			$('#controls').animate({right: '0px'}, 'slow');
         }
     });
 

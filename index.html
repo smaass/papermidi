@@ -1,20 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<script type="text/javascript" src="js/paper-full.min.js"></script>
-    <script type="text/javascript" src="js/Widgets/Loader.js"></script>
-	<script type="text/javascript" src="js/MIDI/AudioDetect.js"></script>
-    <script type="text/javascript" src="js/MIDI/LoadPlugin.js"></script>
-    <script type="text/javascript" src="js/MIDI/Plugin.js"></script>
-    <script type="text/javascript" src="js/MIDI/Player.js"></script>
-    <script type="text/javascript" src="js/Window/DOMLoader.XMLHttp.js"></script>
+	<script src="js/paper-full.min.js"></script>
+    <script src="js/Widgets/Loader.js"></script>
+	<script src="js/MIDI/AudioDetect.js"></script>
+    <script src="js/MIDI/LoadPlugin.js"></script>
+    <script src="js/MIDI/Plugin.js"></script>
+    <script src="js/MIDI/Player.js"></script>
+    <script src="js/Window/DOMLoader.XMLHttp.js"></script>
     <!-- extras -->
-    <script type="text/javascript" src="inc/Base64.js"></script>
-    <script type="text/javascript" src="inc/base64binary.js"></script>
-	<script type="text/javascript" src="js/papermidi.js"></script>
+    <script src="inc/Base64.js"></script>
+    <script src="inc/base64binary.js"></script>
+    <script src="js/jquery-2.1.1.js"></script>
+    <script src="js/knockout-3.0.0.js"></script>
+	<script src="js/papermidi.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Jura:600' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="css/papermidi.css">
 </head>
 <body>
 	<canvas id="myCanvas" resize></canvas>
+
+    <div id="controls">
+        <div id="modes">
+            <h1>Mode</h1>
+            <select data-bind="foreach: modes">
+                <option class="scale" data-bind="text: name, attr: {'data-id': $index, selected: isSelected()}"></option>
+            </select>
+        </div>
+        <div id="button-go">Go!</div>
+    </div>
 </body>
 </html>

@@ -144,34 +144,63 @@ Ball.prototype = {
 	}
 };
 
-var modes = {
-    ionian: [0, 2, 4, 5, 7, 9, 11],
-    dorian: [0, 2, 3, 5, 7, 9, 10],
-    phrygian: [0, 1, 3, 5, 7, 8, 10],
-    lydian: [0, 2, 4, 6, 7, 9, 11],
-    mixolydian: [0, 2, 4, 5, 7, 9, 10],
-    aeolian: [0, 2, 3, 5, 7, 8, 10],
-    locrian: [0, 1, 3, 5, 6, 8, 10]
+var selectedScale;
+
+var Scale = function(name, shape) {
+    this.name = name;
+    this.shape = shape;
+    this.isSelected = function () {
+    	return this == selectedScale;
+    }
 };
 
+var modes = [
+	new Scale("Ionian", [0, 2, 4, 5, 7, 9, 11]),
+	new Scale("Dorian", [0, 2, 3, 5, 7, 9, 10]),
+	new Scale("Phrygian", [0, 1, 3, 5, 7, 8, 10]),
+	new Scale("Lydian", [0, 2, 4, 6, 7, 9, 11]),
+	new Scale("Mixolydian", [0, 2, 4, 5, 7, 9, 10]),
+	new Scale("Aeolian", [0, 2, 3, 5, 7, 8, 10]),
+	new Scale("Locrian", [0, 1, 3, 5, 6, 8, 10])
+];
+
 var randomScale =  function() {
-	var k = Object.keys(modes);
+	selectedScale = modes[ Math.floor(modes.length * Math.random()) ];
+	return generateScale(selectedScale.shape);
+}
+
+var generateScale = function (scaleShape) {
 	var base = Math.floor(Math.random() * 12) + 21;
-	var scaleType = k[ Math.floor(k.length * Math.random()) ];
-	var scale = [].concat.apply([], modes[scaleType].map(function(n) {
+	var scale = [].concat.apply([], scaleShape.map(function(n) {
 		var f = n + base;
 		return [f, f+12, f+24, f+36, f+48, f+60];
 	}));
-	console.log(scaleType);
 	return scale;
 }
 
 var scale = randomScale();
 var balls = [];
 
+var addBalls = function () {
+	for (var i = 0; i < numBalls; i++) {
+		var position = Point.random().multiply(view.size);
+		var vector = new Point({
+			angle: 360 * Math.random(),
+			length: Math.random() * 10
+		});
+		var note = scale[ Math.floor(scale.length * Math.random()) ];
+		balls.push(new Ball(i, note, position, vector));
+	}
+}
+
 paper.install(window);
 
 window.onload = function() {
+
+	var viewModel = {
+	    modes: ko.observableArray(modes)
+	};
+	ko.applyBindings(viewModel);
 
 	MIDI.loader = new widgets.Loader("Loading...");
 
@@ -181,16 +210,7 @@ window.onload = function() {
         callback: function () {
             MIDI.programChange(0, 0); // Grand piano
             paper.setup('myCanvas');
-
-			for (var i = 0; i < numBalls; i++) {
-				var position = Point.random().multiply(view.size);
-				var vector = new Point({
-					angle: 360 * Math.random(),
-					length: Math.random() * 10
-				});
-				var note = scale[ Math.floor(scale.length * Math.random()) ];
-				balls.push(new Ball(i, note, position, vector));
-			}
+            addBalls();
 
 			view.onFrame = function() {
 				for (var i = 0; i < balls.length - 1; i++) {
@@ -207,4 +227,15 @@ window.onload = function() {
 			MIDI.loader.stop();
         }
     });
+
+    $('#button-go').click(function () {
+    	var scaleIndex = $('#modes select option:selected').data('id');
+    	scale = generateScale(modes[scaleIndex].shape);
+
+    	for (var i = 0; i < balls.length; i++) {
+    		balls[i].path.remove();
+    	}
+    	balls = [];
+    	addBalls();
+	});
 }

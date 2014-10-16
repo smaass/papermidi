@@ -1,8 +1,8 @@
 var numBalls = 10;
 var minNote = 21;
 var maxNote = 92;
-var minRadius = 30;
-var maxRadius = 80;
+var minRadius = 20;
+var maxRadius = 60;
 
 var sqrtMinN = Math.sqrt(minNote);
 var sqrtDiff = Math.sqrt(maxNote) - Math.sqrt(minNote);
@@ -173,9 +173,11 @@ paper.install(window);
 
 window.onload = function() {
 
+	MIDI.loader = new widgets.Loader("Loading...");
+
     MIDI.loadPlugin({
         soundfontUrl: "./soundfont/",
-        instruments: [ "acoustic_grand_piano", "synth_drum" ],
+        instruments: [ "acoustic_grand_piano" ],
         callback: function () {
             MIDI.programChange(0, 0); // Grand piano
             paper.setup('myCanvas');
@@ -202,6 +204,7 @@ window.onload = function() {
 			}
 
 			view.draw();
+			MIDI.loader.stop();
         }
     });
 }

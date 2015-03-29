@@ -21,11 +21,33 @@
 	<canvas id="myCanvas" resize></canvas>
 
     <div id="controls">
-        <div id="modes">
+        <div id="modes" class="control">
             <h1>Mode</h1>
             <select data-bind="foreach: modes">
                 <option class="scale" data-bind="text: name, attr: {'data-id': $index, selected: isSelected()}"></option>
             </select>
+        </div>
+        <div id="balls" class="control">
+            <h1>Balls</h1>
+
+            <div>
+                <label>Number:</label>
+                <input type="number" data-bind="value: numBalls" class="numBalls">
+            </div>
+            <!--
+            <div>
+                <label>Min radius:</label>
+                <input type="number" data-bind="value: minRadius" class="minRadius">
+            </div>
+            -->
+            <div>
+                <label>Max radius:</label>
+                <input type="number" data-bind="value: maxRadius" class="maxRadius">
+            </div>
+            <div>
+                <label>Max speed:</label>
+                <input type="number" data-bind="value: maxSpeed" class="maxSpeed">
+            </div>
         </div>
         <div id="button-go">Go!</div>
     </div>

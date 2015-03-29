@@ -7,7 +7,7 @@ body {
 }
 
 #controls {
-	position: absolute;
+	position: fixed;
 	width: 300px;
 	height: 100%;
 	top: 0;
@@ -15,10 +15,18 @@ body {
 	background: rgb(41, 79, 109);
 	opacity: 0.9;
 }
-
-#modes {
+#controls .control {
+	position: relative;
 	width: 250px;
 	margin: auto;
+}
+#controls .control div {
+	margin: 10px 0;
+}
+#controls .control div input {
+	position: absolute;
+	width: 100px;
+	right: 0;
 }
 
 #modes select {
@@ -30,6 +38,8 @@ body {
 	border-style: none;
 	font-family: 'Jura', sans-serif;
 }
+
+
 
 #button-go {
 	width: 100px;

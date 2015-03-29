@@ -1,8 +1,9 @@
-var numBalls = 10;
+var numBalls = 15;
 var minNote = 21;
 var maxNote = 92;
 var minRadius = 20;
 var maxRadius = 60;
+var maxSpeed = 15;
 
 var sqrtMinN = Math.sqrt(minNote);
 var sqrtDiff = Math.sqrt(maxNote) - Math.sqrt(minNote);
@@ -17,7 +18,7 @@ function Ball(id, n, p, v) {
 	this.radius = (1 - ((Math.sqrt(n) - sqrtMinN) / sqrtDiff)) * (maxRadius - minRadius) + minRadius;
 	this.point = p;
 	this.vector = v;
-	this.maxVec = 15;
+	this.maxVec = maxSpeed;
 	this.numSegment = Math.floor(this.radius / 3 + 2);
 	this.boundOffset = [];
 	this.boundOffsetBuff = [];
@@ -161,7 +162,8 @@ var modes = [
 	new Scale("Lydian", [0, 2, 4, 6, 7, 9, 11]),
 	new Scale("Mixolydian", [0, 2, 4, 5, 7, 9, 10]),
 	new Scale("Aeolian", [0, 2, 3, 5, 7, 8, 10]),
-	new Scale("Locrian", [0, 1, 3, 5, 6, 8, 10])
+	new Scale("Locrian", [0, 1, 3, 5, 6, 8, 10]),
+	new Scale("Harmonic minor", [0, 2, 3, 5, 7, 8, 11])
 ];
 
 var randomScale =  function() {
@@ -198,7 +200,8 @@ paper.install(window);
 window.onload = function() {
 
 	var viewModel = {
-	    modes: ko.observableArray(modes)
+	    modes: ko.observableArray(modes),
+	    numBalls: ko.observable(numBalls)
 	};
 	ko.applyBindings(viewModel);
 
@@ -232,6 +235,11 @@ window.onload = function() {
 
     $('#button-go').click(function () {
     	var scaleIndex = $('#modes select option:selected').data('id');
+    	numBalls = $('#balls .numBalls').val();
+    	//minRadius = $('#balls .minRadius').val();
+    	maxRadius = $('#balls .maxRadius').val();
+    	maxSpeed = $('#balls .maxSpeed').val();
+
     	scale = generateScale(modes[scaleIndex].shape);
 
     	for (var i = 0; i < balls.length; i++) {
